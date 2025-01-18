@@ -58,6 +58,9 @@ public class WhisperFullParams extends Structure {
         no_context = enable ? CBool.FALSE : CBool.TRUE;
     }
 
+    /** Generate timestamps or not? */
+    public CBool no_timestamps;
+
     /** Flag to force single segment output (useful for streaming). (default = false) */
     public CBool single_segment;
 
@@ -126,14 +129,6 @@ public class WhisperFullParams extends Structure {
     /** Maximum tokens per segment (0, default = no limit) */
     public int max_tokens;
 
-    /** Flag to speed up the audio by 2x using Phase Vocoder. (default = false) */
-    public CBool speed_up;
-
-    /** Flag to speed up the audio by 2x using Phase Vocoder. (default = false) */
-    public void speedUp(boolean enable) {
-        speed_up = enable ? CBool.TRUE : CBool.FALSE;
-    }
-
     /** Overwrite the audio context size (0 = use default). */
     public int audio_ctx;
 
@@ -144,6 +139,9 @@ public class WhisperFullParams extends Structure {
     public void tdrzEnable(boolean enable) {
         tdrz_enable = enable ? CBool.TRUE : CBool.FALSE;
     }
+
+    /** Regular expression matching tokens to suppress. */
+    public String suppress_regex;
 
     /** Tokens to provide to the whisper decoder as an initial prompt.
      * These are prepended to any existing text context from a previous call. */
@@ -183,11 +181,11 @@ public class WhisperFullParams extends Structure {
     }
 
     /** Flag to suppress non-speech tokens. */
-    public CBool suppress_non_speech_tokens;
+    public CBool suppress_nst;
 
     /** Flag to suppress non-speech tokens. */
     public void suppressNonSpeechTokens(boolean enable) {
-        suppress_non_speech_tokens = enable ? CBool.TRUE : CBool.FALSE;
+        suppress_nst = enable ? CBool.TRUE : CBool.FALSE;
     }
 
     /** Initial decoding temperature. */
@@ -304,18 +302,25 @@ public class WhisperFullParams extends Structure {
         logits_filter_callback = CallbackReference.getFunctionPointer(callback);
     }
 
+    /** Grammar stuff */
+    public Pointer grammar_rules;
+    public long n_grammar_rules;
+    public long i_start_rule;
+    public float grammar_penalty;
+
     @Override
     protected List<String> getFieldOrder() {
         return Arrays.asList("strategy", "n_threads", "n_max_text_ctx", "offset_ms", "duration_ms", "translate",
-                "no_context", "single_segment",
+                "no_context", "single_segment", "no_timestamps",
                 "print_special", "print_progress", "print_realtime", "print_timestamps",  "token_timestamps",
-                "thold_pt", "thold_ptsum", "max_len", "split_on_word", "max_tokens", "speed_up", "audio_ctx",
-                "tdrz_enable", "initial_prompt", "prompt_tokens", "prompt_n_tokens", "language", "detect_language",
-                "suppress_blank", "suppress_non_speech_tokens", "temperature", "max_initial_ts", "length_penalty",
+                "thold_pt", "thold_ptsum", "max_len", "split_on_word", "max_tokens", "audio_ctx",
+                "tdrz_enable", "suppress_regex", "initial_prompt", "prompt_tokens", "prompt_n_tokens", "language", "detect_language",
+                "suppress_blank", "suppress_nst", "temperature", "max_initial_ts", "length_penalty",
                 "temperature_inc", "entropy_thold", "logprob_thold", "no_speech_thold", "greedy", "beam_search",
                 "new_segment_callback", "new_segment_callback_user_data",
                 "progress_callback", "progress_callback_user_data",
                 "encoder_begin_callback", "encoder_begin_callback_user_data",
-                "logits_filter_callback", "logits_filter_callback_user_data");
+                "logits_filter_callback", "logits_filter_callback_user_data",
+                "grammar_rules", "n_grammar_rules", "i_start_rule", "grammar_penalty");
     }
 }

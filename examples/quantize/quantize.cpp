@@ -36,7 +36,7 @@ struct whisper_filters {
 };
 
 // quantize a model
-bool whisper_model_quantize(const std::string & fname_inp, const std::string & fname_out, ggml_ftype ftype) {
+static bool whisper_model_quantize(const std::string & fname_inp, const std::string & fname_out, ggml_ftype ftype) {
     gpt_vocab vocab;
 
     printf("%s: loading model from '%s'\n", __func__, fname_inp.c_str());
@@ -138,7 +138,7 @@ bool whisper_model_quantize(const std::string & fname_inp, const std::string & f
         //    return false;
         //}
 
-        char word[128];
+        char word[129];
 
         for (int i = 0; i < n_vocab; i++) {
             uint32_t len;
